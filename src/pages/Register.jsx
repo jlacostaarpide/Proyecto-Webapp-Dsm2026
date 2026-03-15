@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
+import { Link } from 'react-router';
 import './Register.css';
 
 function Register() {
@@ -72,9 +73,9 @@ function Register() {
               <h2 className="text-success mb-4">🎉 ¡Cuenta Creada!</h2>
               <p className="lead">Tu registro se ha completado con éxito.</p>
               <p className="text-muted">Ahora puedes iniciar sesión para disfrutar de CineApp DSM.</p>
-              <Button variant="primary" className="mt-4 px-5 rounded-pill shadow">
+              <Link to="/login" className="btn btn-primary mt-4 px-5 rounded-pill shadow">
                 Ir al Login
-              </Button>
+              </Link>
             </div>
           </div>
         </div>
