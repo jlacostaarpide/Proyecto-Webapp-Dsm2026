@@ -13,11 +13,18 @@ function MovieDetail({ peliculas }) {
   const [averageRating, setAverageRating] = useState(0);
   const [totalRatings, setTotalRatings] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
+  const [hasVoted, setHasVoted] = useState(false);
 
   const loadRatings = () => {
     const allRatings = JSON.parse(localStorage.getItem('ratings') || '{}');
     const movieRatings = allRatings[id] || {};
     const values = Object.values(movieRatings);
+    
+    if (login && username && movieRatings[username]) {
+      setHasVoted(true);
+    } else {
+      setHasVoted(false);
+    }
     
     if (values.length > 0) {
       const sum = values.reduce((a, b) => a + b, 0);
@@ -49,6 +56,8 @@ function MovieDetail({ peliculas }) {
       navigate('/login');
       return;
     }
+
+    if (hasVoted) return;
 
     const allRatings = JSON.parse(localStorage.getItem('ratings') || '{}');
     if (!allRatings[id]) allRatings[id] = {};
@@ -106,10 +115,11 @@ function MovieDetail({ peliculas }) {
                   return (
                     <span 
                       key={star} 
-                      className={`star-ui fs-4 ${isActive ? 'active' : 'text-muted'}`}
-                      onMouseEnter={() => setHoverRating(star)}
+                      className={`star-ui fs-4 ${isActive ? 'active' : 'text-muted'} ${hasVoted ? 'voted' : ''}`}
+                      onMouseEnter={() => !hasVoted && setHoverRating(star)}
                       onClick={() => handleVote(star)}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: hasVoted ? 'default' : 'pointer' }}
+                      title={hasVoted ? 'Ya has valorado esta película' : `Puntuar con ${star} estrellas`}
                     >
                       {isActive ? '★' : '☆'}
                     </span>
@@ -120,6 +130,7 @@ function MovieDetail({ peliculas }) {
                 {averageRating > 0 ? averageRating.toFixed(1) : '-'}
               </span>
               <span className="text-light me-3 small">({totalRatings} valoraciones)</span>
+              {hasVoted && <Badge bg="success" className="me-2 bg-opacity-75">¡Gracias por tu voto!</Badge>}
               <Badge bg="info" className="me-2">{movie.categoria}</Badge>
               <span className="text-light small">2024</span>
             </div>
