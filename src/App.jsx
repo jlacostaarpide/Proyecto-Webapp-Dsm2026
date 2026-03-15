@@ -11,6 +11,7 @@ import ErrorPage from './pages/ErrorPage';
 import AuthContext from './store/AuthContext';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import Favorites from './pages/Favorites';
 
 const PELICULAS_MOCK = [
   {
@@ -132,7 +133,7 @@ function App() {
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/movie/:id" element={<MovieDetail peliculas={peliculas} />} />
           
-          <Route path="/favorites" element={<div className="container mt-4"><h2>Mis Favoritos</h2><p>Próximamente...</p></div>} />
+          <Route path="/favorites" element={<Favorites peliculas={peliculas} />} />
           
           <Route path="*" element={<ErrorPage />} />
         </Routes>

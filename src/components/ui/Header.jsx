@@ -22,10 +22,10 @@ function Header() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto align-items-center">
             <Nav.Link as={Link} to="/" className="mx-2">Inicio</Nav.Link>
-            <Nav.Link as={Link} to="/contact" className="mx-2">Contacto</Nav.Link>
             
             {login ? (
               <div className="d-flex align-items-center ms-lg-3">
+                <Nav.Link as={Link} to="/favorites" className="mx-2 text-warning fw-bold">⭐ Mis Favoritos</Nav.Link>
                 <span className="text-light me-3 fw-medium">Hola, <span className="text-warning">{username}</span></span>
                 <Button 
                   variant="outline-danger" 
