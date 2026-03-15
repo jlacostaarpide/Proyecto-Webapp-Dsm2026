@@ -22,7 +22,7 @@ function Header() {
               <Button variant="outline-light">Cerrar Sesión</Button>
             ) : (
               <>
-                <Nav.Link as={NavLink} to="/login">Login</Nav.Link>
+                <Nav.Link as={Link} to="/login" className="mx-2">Login</Nav.Link>
                 <Nav.Link as={Link} to="/register" className="mx-2 border border-primary rounded-pill px-3">Registro</Nav.Link>
               </>
             )}

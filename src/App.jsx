@@ -10,6 +10,7 @@ import MovieDetail from './pages/MovieDetail';
 import ErrorPage from './pages/ErrorPage';
 import AuthContext from './store/AuthContext';
 import Register from './pages/Register';
+import Login from './pages/Login';
 
 const PELICULAS_MOCK = [
   {
@@ -92,12 +93,11 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/legal" element={<LegalNotice />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/movie/:id" element={<MovieDetail peliculas={peliculas} />} />
           
           {/* Placeholders para futuras implementaciones */}
           <Route path="/favorites" element={<div className="container mt-4"><h2>Mis Favoritos</h2><p>Próximamente...</p></div>} />
-          <Route path="/login" element={<div className="container mt-4"><h2>Login</h2><p>Próximamente...</p></div>} />
-          <Route path="/register" element={<div className="container mt-4"><h2>Registro</h2><p>Próximamente...</p></div>} />
           
           <Route path="*" element={<ErrorPage />} />
         </Routes>

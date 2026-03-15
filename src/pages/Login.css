@@ -1,0 +1,13 @@
+.login-card {
+  border-radius: 20px;
+  background: white;
+  transition: transform 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-5px);
+}
+
+.login-card h2 {
+  letter-spacing: -1px;
+}
