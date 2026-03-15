@@ -9,7 +9,10 @@ function Pelicula({ id, titulo, imagen, descripcion, categoria, nota }) {
       <Card.Body className="d-flex flex-column">
         <div className="d-flex justify-content-between align-items-start mb-2">
           <Card.Title className="mb-0">{titulo}</Card.Title>
-          <Badge bg="warning" text="dark">⭐ -</Badge>
+          <div className="d-flex flex-column align-items-end gap-1">
+            <Badge bg="warning" text="dark">⭐ -</Badge>
+            <Badge bg="secondary" className="bg-opacity-75">💬 -</Badge>
+          </div>
         </div>
         <Badge bg="info" className="mb-3 w-fit-content" style={{ alignSelf: 'start' }}>{categoria}</Badge>
         <Card.Text className="text-muted small">
