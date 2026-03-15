@@ -10,6 +10,24 @@ function MovieDetail({ peliculas }) {
   const { login, username } = useContext(AuthContext);
   const [movie, setMovie] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [averageRating, setAverageRating] = useState(0);
+  const [totalRatings, setTotalRatings] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+
+  const loadRatings = () => {
+    const allRatings = JSON.parse(localStorage.getItem('ratings') || '{}');
+    const movieRatings = allRatings[id] || {};
+    const values = Object.values(movieRatings);
+    
+    if (values.length > 0) {
+      const sum = values.reduce((a, b) => a + b, 0);
+      setAverageRating(sum / values.length);
+      setTotalRatings(values.length);
+    } else {
+      setAverageRating(0);
+      setTotalRatings(0);
+    }
+  };
 
   useEffect(() => {
     const foundMovie = peliculas.find((p) => p.id === id);
@@ -21,8 +39,25 @@ function MovieDetail({ peliculas }) {
         const favorites = JSON.parse(localStorage.getItem(`favorites_${username}`) || '[]');
         setIsFavorite(favorites.includes(id));
       }
+
+      loadRatings();
     }
   }, [id, peliculas, login, username]);
+
+  const handleVote = (rating) => {
+    if (!login) {
+      navigate('/login');
+      return;
+    }
+
+    const allRatings = JSON.parse(localStorage.getItem('ratings') || '{}');
+    if (!allRatings[id]) allRatings[id] = {};
+    
+    allRatings[id][username] = rating;
+    localStorage.setItem('ratings', JSON.stringify(allRatings));
+    
+    loadRatings();
+  };
 
   const toggleFavorite = () => {
     if (!login) {
@@ -65,12 +100,26 @@ function MovieDetail({ peliculas }) {
           <Container className="hero-content">
             <h1 className="movie-hero-title">{movie.titulo}</h1>
             <div className="movie-hero-meta mb-3 d-flex align-items-center flex-wrap">
-              <div className="stars-container me-3">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <span key={star} className="star-ui text-muted fs-4">☆</span>
-                ))}
+              <div className="stars-container me-2" onMouseLeave={() => setHoverRating(0)}>
+                {[1, 2, 3, 4, 5].map((star) => {
+                  const isActive = (hoverRating || averageRating) >= star;
+                  return (
+                    <span 
+                      key={star} 
+                      className={`star-ui fs-4 ${isActive ? 'active' : 'text-muted'}`}
+                      onMouseEnter={() => setHoverRating(star)}
+                      onClick={() => handleVote(star)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {isActive ? '★' : '☆'}
+                    </span>
+                  );
+                })}
               </div>
-              <span className="text-light me-3 small">(0 valoraciones)</span>
+              <span className="text-warning fw-bold me-3 fs-5">
+                {averageRating > 0 ? averageRating.toFixed(1) : '-'}
+              </span>
+              <span className="text-light me-3 small">({totalRatings} valoraciones)</span>
               <Badge bg="info" className="me-2">{movie.categoria}</Badge>
               <span className="text-light small">2024</span>
             </div>
@@ -110,7 +159,7 @@ function MovieDetail({ peliculas }) {
               <h5>Detalles</h5>
               <ul className="list-unstyled text-secondary">
                 <li className="mb-2"><strong>Género:</strong> {movie.categoria}</li>
-                <li className="mb-2"><strong>Calificación:</strong> ⭐ -</li>
+                <li className="mb-2"><strong>Calificación:</strong> ⭐ {averageRating > 0 ? averageRating.toFixed(1) : '-'}</li>
                 <li className="mb-2"><strong>Año:</strong> 2024</li>
                 <li className="mb-2"><strong>Duración:</strong> 2h 15m (Aprox)</li>
               </ul>

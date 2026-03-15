@@ -88,10 +88,16 @@
 }
 
 .star-ui {
-  cursor: default;
-  transition: color 0.2s;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.star-ui:hover {
+  transform: scale(1.2);
 }
 
 .star-ui.active {
   color: #ffc107 !important;
+  text-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
 }
