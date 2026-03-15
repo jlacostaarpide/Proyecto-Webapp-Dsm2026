@@ -1,19 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { Container, Button, Badge, Row, Col } from 'react-bootstrap';
+import AuthContext from '../store/AuthContext';
 import './MovieDetail.css';
 
 function MovieDetail({ peliculas }) {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { login, username } = useContext(AuthContext);
   const [movie, setMovie] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     const foundMovie = peliculas.find((p) => p.id === id);
     if (foundMovie) {
       setMovie(foundMovie);
+      
+      // Comprobar si ya es favorita si hay sesión
+      if (login && username) {
+        const favorites = JSON.parse(localStorage.getItem(`favorites_${username}`) || '[]');
+        setIsFavorite(favorites.includes(id));
+      }
     }
-  }, [id, peliculas]);
+  }, [id, peliculas, login, username]);
+
+  const toggleFavorite = () => {
+    if (!login) {
+      navigate('/login');
+      return;
+    }
+
+    const storageKey = `favorites_${username}`;
+    let favorites = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+    if (isFavorite) {
+      // Quitar de favoritos
+      favorites = favorites.filter(favId => favId !== id);
+    } else {
+      // Añadir a favoritos
+      favorites.push(id);
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(favorites));
+    setIsFavorite(!isFavorite);
+  };
 
   if (!movie) {
     return (
@@ -43,8 +73,12 @@ function MovieDetail({ peliculas }) {
               <Button variant="light" className="me-2 px-4 py-2 fw-bold">
                 ▶ Reproducir
               </Button>
-              <Button variant="secondary" className="px-4 py-2 fw-bold bg-opacity-50 border-0">
-                + Mi lista
+              <Button 
+                variant={isFavorite ? "warning" : "secondary"} 
+                className={`px-4 py-2 fw-bold ${!isFavorite ? 'bg-opacity-50' : ''} border-0`}
+                onClick={toggleFavorite}
+              >
+                {isFavorite ? '❤️ En favoritos' : '⭐ Añadir a favoritos'}
               </Button>
             </div>
             <p className="movie-hero-description">
