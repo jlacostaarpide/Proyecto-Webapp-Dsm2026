@@ -4,8 +4,10 @@ import { Link } from 'react-router';
 
 function Pelicula({ id, titulo, imagen, descripcion, categoria, nota }) {
   const [averageRating, setAverageRating] = useState(0);
+  const [commentCount, setCommentCount] = useState(0);
 
   useEffect(() => {
+    // Nota media
     const allRatings = JSON.parse(localStorage.getItem('ratings') || '{}');
     const movieRatings = allRatings[id] || {};
     const values = Object.values(movieRatings);
@@ -14,6 +16,10 @@ function Pelicula({ id, titulo, imagen, descripcion, categoria, nota }) {
       const sum = values.reduce((a, b) => a + b, 0);
       setAverageRating(sum / values.length);
     }
+
+    // Contador comentarios
+    const allComments = JSON.parse(localStorage.getItem('comments') || '{}');
+    setCommentCount((allComments[id] || []).length);
   }, [id]);
 
   return (
@@ -24,7 +30,7 @@ function Pelicula({ id, titulo, imagen, descripcion, categoria, nota }) {
           <Card.Title className="mb-0">{titulo}</Card.Title>
           <div className="d-flex flex-column align-items-end gap-1">
             <Badge bg="warning" text="dark">⭐ {averageRating > 0 ? averageRating.toFixed(1) : '-'}</Badge>
-            <Badge bg="secondary" className="bg-opacity-75">💬 -</Badge>
+            <Badge bg="secondary" className="bg-opacity-75">💬 {commentCount}</Badge>
           </div>
         </div>
         <Badge bg="info" className="mb-3 w-fit-content" style={{ alignSelf: 'start' }}>{categoria}</Badge>

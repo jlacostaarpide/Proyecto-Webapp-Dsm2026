@@ -14,8 +14,11 @@ function MovieDetail({ peliculas }) {
   const [totalRatings, setTotalRatings] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [hasVoted, setHasVoted] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
 
-  const loadRatings = () => {
+  const loadData = () => {
+    // Cargar Ratings
     const allRatings = JSON.parse(localStorage.getItem('ratings') || '{}');
     const movieRatings = allRatings[id] || {};
     const values = Object.values(movieRatings);
@@ -34,6 +37,10 @@ function MovieDetail({ peliculas }) {
       setAverageRating(0);
       setTotalRatings(0);
     }
+
+    // Cargar Comentarios
+    const allComments = JSON.parse(localStorage.getItem('comments') || '{}');
+    setComments(allComments[id] || []);
   };
 
   useEffect(() => {
@@ -47,9 +54,33 @@ function MovieDetail({ peliculas }) {
         setIsFavorite(favorites.includes(id));
       }
 
-      loadRatings();
+      loadData();
     }
   }, [id, peliculas, login, username]);
+
+  const handleCommentSubmit = (e) => {
+    e.preventDefault();
+    if (!login) {
+      navigate('/login');
+      return;
+    }
+    if (!newComment.trim()) return;
+
+    const allComments = JSON.parse(localStorage.getItem('comments') || '{}');
+    if (!allComments[id]) allComments[id] = [];
+
+    const commentObj = {
+      username,
+      text: newComment,
+      date: new Date().toLocaleDateString()
+    };
+
+    allComments[id].push(commentObj);
+    localStorage.setItem('comments', JSON.stringify(allComments));
+    
+    setComments(allComments[id]);
+    setNewComment("");
+  };
 
   const handleVote = (rating) => {
     if (!login) {
@@ -65,7 +96,7 @@ function MovieDetail({ peliculas }) {
     allRatings[id][username] = rating;
     localStorage.setItem('ratings', JSON.stringify(allRatings));
     
-    loadRatings();
+    loadData();
   };
 
   const toggleFavorite = () => {
@@ -161,8 +192,42 @@ function MovieDetail({ peliculas }) {
             <p className="lead text-light">{movie.descripcion}</p>
             <hr className="bg-secondary" />
             <div className="mt-4">
-              <h5>Comentarios</h5>
-              <p className="text-muted italic">Próximamente: Implementación de comentarios de usuarios.</p>
+              <h5 className="mb-3 text-warning">Comentarios ({comments.length})</h5>
+              
+              {login ? (
+                <form onSubmit={handleCommentSubmit} className="mb-4">
+                  <div className="form-group mb-2">
+                    <textarea 
+                      className="form-control bg-dark text-white border-secondary" 
+                      rows="3" 
+                      placeholder="Escribe tu opinión..."
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                    ></textarea>
+                  </div>
+                  <Button type="submit" variant="primary" size="sm" className="px-4">Enviar comentario</Button>
+                </form>
+              ) : (
+                <Alert variant="secondary" className="bg-opacity-25 border-secondary text-light">
+                  Debes <Link to="/login" className="text-warning">iniciar sesión</Link> para dejar un comentario.
+                </Alert>
+              )}
+
+              <div className="comments-list">
+                {comments.length > 0 ? (
+                  comments.slice().reverse().map((c, index) => (
+                    <div key={index} className="comment-item p-3 mb-2 rounded-3" style={{ background: '#1c1c1c' }}>
+                      <div className="d-flex justify-content-between align-items-center mb-1">
+                        <span className="fw-bold text-info">@{c.username}</span>
+                        <span className="text-muted small">{c.date}</span>
+                      </div>
+                      <p className="mb-0 text-light">{c.text}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-muted italic">Aún no hay comentarios. ¡Sé el primero en opinar!</p>
+                )}
+              </div>
             </div>
           </Col>
           <Col md={4} className="ps-md-5">
