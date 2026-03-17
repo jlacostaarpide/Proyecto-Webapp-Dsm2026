@@ -45,7 +45,7 @@ function Home({ peliculas }) {
       <div className="container mt-5">
         <div className="catalog-header mb-5 border-bottom pb-4">
           <div className="row align-items-center g-4">
-            <div className="col-lg-4">
+            <div className="col-lg-3">
               <h2 className="text-dark fw-bold mb-0">Catálogo Completo</h2>
             </div>
             <div className="col-lg-4">
@@ -61,19 +61,19 @@ function Home({ peliculas }) {
                 <span className="search-icon position-absolute top-50 translate-middle-y ms-3 text-primary">🔍</span>
               </div>
             </div>
-            <div className="col-lg-4 d-flex justify-content-lg-end">
-              <ButtonGroup className="category-filters shadow-sm rounded-pill overflow-hidden">
+            <div className="col-lg-5 d-flex justify-content-lg-end">
+              <div className="category-filters d-flex flex-wrap gap-2 justify-content-center justify-content-lg-end">
                 {categorias.map(cat => (
                   <Button 
                     key={cat}
-                    variant={categoriaActiva === cat ? "primary" : "light"}
+                    variant={categoriaActiva === cat ? "primary" : "outline-primary"}
                     onClick={() => setCategoriaActiva(cat)}
-                    className="px-3 py-2 border-0"
+                    className="rounded-pill px-4 shadow-sm"
                   >
                     {cat}
                   </Button>
                 ))}
-              </ButtonGroup>
+              </div>
             </div>
           </div>
         </div>
