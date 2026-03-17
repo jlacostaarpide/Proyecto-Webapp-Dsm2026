@@ -1,6 +1,6 @@
 # CineApp DSM - Documentación Técnica del Proyecto
 
-Este documento describe la arquitectura, los componentes y las características de React utilizadas en el desarrollo de la aplicación CineApp DSM, una plataforma de Video on Demand (VOD) desarrollada como proyecto de la asignatura DSM.
+Este documento describe la arquitectura, los componentes y las características de React utilizadas en el desarrollo de la aplicación CineApp DSM, una plataforma de Video on Demand (VOD) desarrollada como proyecto de la asignatura DSM de Yoel Agirretxe y Juan Lacosta.
 
 - **Repositorio GitHub**: https://github.com/jlacostaarpide/Proyecto-Webapp-Dsm2026
 - **Despliegue en Firebase Hosting**: https://webapp-react-dsm2026.web.app/
